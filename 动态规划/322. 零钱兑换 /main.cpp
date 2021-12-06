@@ -4,13 +4,32 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <math.h>
+#include <climits>
 
 /*
             0, n = 0
  dp(n) =    -1, n < 0
             min{dp(n - coin) + 1 | coin E coins}, n > 0
-
  */
+
+int rCoinchange(int *coins, int len, int amount) {
+    if (amount == 0) {
+        return 0;
+    }
+    if (amount < 0) {
+        return -1;
+    }
+    int res = INT_MAX;
+    for (int i = 0; i < len; i++) {
+        int subRes = rCoinchange(coins, len, amount - coins[i]);
+        if (res == -1) {
+            continue;
+        }
+        res = fmin(res, subRes + 1);
+    }
+    return (res == INT_MAX ? -1 : res);
+}
+
 int coinChange(int *coins, int len, int amount) {
     if (amount == 0) {
         return 0;
@@ -36,8 +55,11 @@ int coinChange(int *coins, int len, int amount) {
 }
 
 int main() {
-    int coins[] = {5, 7};
-    int a = coinChange(coins, sizeof(coins) / sizeof(int), 16);
+    int coins[] = {5, 7, 30, 32, 1, 6, 9};
+    int a = coinChange(coins, sizeof(coins) / sizeof(int), 7895);
+    int b = coinChange(coins, sizeof(coins) / sizeof(int), 7895);
+
     printf("%d\n", a);
+    printf("%d\n", b);
     return 0;
 }
