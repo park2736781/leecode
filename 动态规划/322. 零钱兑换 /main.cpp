@@ -12,22 +12,26 @@
             min{dp(n - coin) + 1 | coin E coins}, n > 0
  */
 
-int rCoinChange(int *coins, int len, int amount) {
+int rCoinChange(int *coins, int *dp, int len, int amount) {
     if (amount == 0) {
         return 0;
     }
     if (amount < 0) {
         return -1;
     }
+    if (dp[amount] != -1) {
+        return dp[amount];
+    }
     int res = INT_MAX;
     for (int i = 0; i < len; i++) {
-        int subRes = rCoinChange(coins, len, amount - coins[i]);
+        int subRes = rCoinChange(coins, dp, len, amount - coins[i]);
         if (subRes == -1) {
             continue;
         }
         res = fmin(res, subRes + 1);
     }
-    return (res == INT_MAX ? -1 : res);
+    dp[amount] = (res == INT_MAX ? -1 : res);
+    return dp[amount];
 }
 
 int coinChange(int *coins, int len, int amount) {
@@ -56,8 +60,13 @@ int coinChange(int *coins, int len, int amount) {
 
 int main() {
     int coins[] = {5, 7, 30};
-    int a = coinChange(coins, sizeof(coins) / sizeof(int), 125);
-    int b = rCoinChange(coins, sizeof(coins) / sizeof(int), 125);
+    int amount = 7852;
+    int a = coinChange(coins, sizeof(coins) / sizeof(int), amount);
+    int *dp = (int *) malloc(sizeof(int) * (amount + 1));
+    for (int i = 0; i < sizeof(int) * (amount + 1); i++) {
+        dp[i] = -1;
+    }
+    int b = rCoinChange(coins, dp, sizeof(coins) / sizeof(int), amount);
 
     printf("%d\n", a);
     printf("%d\n", b);
