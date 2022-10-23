@@ -9,5 +9,6 @@
         "__bit_reference": "cpp",
         "algorithm": "cpp",
         "set": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }
